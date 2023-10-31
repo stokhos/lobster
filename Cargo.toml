@@ -2,7 +2,7 @@
 name = "lobster"
 version = "0.7.0"
 authors = ["Michele Lacchia <michelelacchia@gmail.com>"]
-edition = "2018"
+edition = "2021"
 license = "ISC"
 
 readme = "README.md"
@@ -19,9 +19,9 @@ travis-ci = { repository = "rubik/lobster" }
 [dependencies]
 
 [dev-dependencies]
-criterion = { version = "0.3", features = ["html_reports"] }
-csv = "1.1"
-serde = { version = "1", features = ["derive"] }
+criterion = { version = "0.5.1", features = ["html_reports"] }
+csv = "1.3.0"
+serde = { version = "1.0.190", features = ["derive"] }
 
 [profile.release]
 opt-level = 3

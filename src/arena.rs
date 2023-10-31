@@ -62,7 +62,7 @@ impl OrderArena {
 
     pub fn delete(&mut self, id: &u128) -> bool {
         if let Some(idx) = self.order_map.remove(id) {
-            if let Some(mut ord) = self.orders.get_mut(idx) {
+            if let Some(ord) = self.orders.get_mut(idx) {
                 self.free.push(idx);
                 ord.qty = 0;
                 return true;

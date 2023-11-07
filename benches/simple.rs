@@ -5,6 +5,22 @@ fn small_limit_ladder(c: &mut Criterion) {
     c.bench_function("small limit ladder", |b| {
         let mut ob = OrderBook::default();
         b.iter(|| {
+            for i in 0..100 {
+                ob.execute(OrderType::Limit {
+                    id: i as u128,
+                    price: 12345 + i as u64,
+                    qty: i as u64,
+                    side: Side::Bid,
+                });
+            }
+        });
+    });
+}
+
+fn medium_limit_ladder(c: &mut Criterion) {
+    c.bench_function("small limit ladder", |b| {
+        let mut ob = OrderBook::default();
+        b.iter(|| {
             for i in 0..5_000 {
                 ob.execute(OrderType::Limit {
                     id: i as u128,
@@ -21,7 +37,7 @@ fn big_limit_ladder(c: &mut Criterion) {
     c.bench_function("big limit ladder", |b| {
         let mut ob = OrderBook::default();
         b.iter(|| {
-            for i in 0..100_000 {
+            for i in 0..10_000 {
                 ob.execute(OrderType::Limit {
                     id: i as u128,
                     price: 12345 + i as u64,
@@ -33,5 +49,27 @@ fn big_limit_ladder(c: &mut Criterion) {
     });
 }
 
-criterion_group!(benches, small_limit_ladder, big_limit_ladder);
+fn extreme_big_limit_ladder(c: &mut Criterion) {
+    c.bench_function("extreme big limit ladder", |b| {
+        let mut ob = OrderBook::default();
+        b.iter(|| {
+            for i in 0..1_000_000 {
+                ob.execute(OrderType::Limit {
+                    id: i as u128,
+                    price: 12345 + i as u64,
+                    qty: i as u64,
+                    side: Side::Bid,
+                });
+            }
+        });
+    });
+}
+
+criterion_group!(
+    benches,
+    small_limit_ladder,
+    medium_limit_ladder,
+    big_limit_ladder,
+    extreme_big_limit_ladder
+);
 criterion_main!(benches);

@@ -2,7 +2,7 @@ use criterion::{criterion_group, criterion_main, Criterion};
 use lobster::{OrderBook, OrderType, Side};
 
 fn small_limit_ladder(c: &mut Criterion) {
-    c.bench_function("small limit ladder", |b| {
+    c.bench_function("small limit ladder (100 levels)", |b| {
         let mut ob = OrderBook::default();
         b.iter(|| {
             for i in 0..100 {
@@ -18,7 +18,7 @@ fn small_limit_ladder(c: &mut Criterion) {
 }
 
 fn medium_limit_ladder(c: &mut Criterion) {
-    c.bench_function("small limit ladder", |b| {
+    c.bench_function("small limit ladder (5000 levels)", |b| {
         let mut ob = OrderBook::default();
         b.iter(|| {
             for i in 0..5_000 {
@@ -34,7 +34,7 @@ fn medium_limit_ladder(c: &mut Criterion) {
 }
 
 fn big_limit_ladder(c: &mut Criterion) {
-    c.bench_function("big limit ladder", |b| {
+    c.bench_function("big limit ladder (10000 levels)", |b| {
         let mut ob = OrderBook::default();
         b.iter(|| {
             for i in 0..10_000 {
@@ -50,7 +50,7 @@ fn big_limit_ladder(c: &mut Criterion) {
 }
 
 fn extreme_big_limit_ladder(c: &mut Criterion) {
-    c.bench_function("extreme big limit ladder", |b| {
+    c.bench_function("extreme big limit ladder (1000000 levels)", |b| {
         let mut ob = OrderBook::default();
         b.iter(|| {
             for i in 0..1_000_000 {

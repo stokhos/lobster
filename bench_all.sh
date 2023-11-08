@@ -3,7 +3,7 @@ cargo clean
 git switch master
 cargo +stable bench -- --save-baseline master
 
-git switch btree_tinyve
+git switch btree_tinyvec
 cargo +stable bench -- --save-baseline btree_tinyvec
 
 git switch btree_tinyvec_ahash

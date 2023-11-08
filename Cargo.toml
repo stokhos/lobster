@@ -17,6 +17,7 @@ coveralls = { repository = "rubik/lobster" }
 travis-ci = { repository = "rubik/lobster" }
 
 [dependencies]
+tikv-jemallocator = "0.5.4"
 
 [dev-dependencies]
 criterion = { version = "0.5.1", features = ["html_reports"] }
@@ -54,3 +55,5 @@ harness = false
 
 [lib]
 bench = false
+
+

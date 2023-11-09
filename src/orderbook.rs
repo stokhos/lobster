@@ -518,13 +518,14 @@ impl OrderBook {
 
 #[cfg(test)]
 mod test {
+    use super::{DEFAULT_ARENA_CAPACITY, DEFAULT_QUEUE_CAPACITY};
     use crate::{
         BookDepth, BookLevel, FillMetadata, OrderBook, OrderEvent, OrderType,
         Side, Trade,
     };
     use std::collections::BTreeMap;
 
-    const DEFAULT_QUEUE_SIZE: usize = 10;
+    // const DEFAULT_QUEUE_SIZE: usize = 10;
     const BID_ASK_COMBINATIONS: [(Side, Side); 2] =
         [(Side::Bid, Side::Ask), (Side::Ask, Side::Bid)];
 
@@ -554,7 +555,7 @@ mod test {
         let mut bk = BTreeMap::new();
         for (p, i) in orders {
             bk.entry(p)
-                .or_insert_with(|| Vec::with_capacity(DEFAULT_QUEUE_SIZE))
+                .or_insert_with(|| Vec::with_capacity(DEFAULT_QUEUE_CAPACITY))
                 .push(i);
         }
         bk
@@ -606,7 +607,10 @@ mod test {
                 assert_eq!(ob.min_ask(), None);
                 assert_eq!(ob.max_bid(), Some(395));
                 assert_eq!(ob._asks(), BTreeMap::new());
-                assert_eq!(ob._bids(), init_book(vec![(395, 9999)]));
+                assert_eq!(
+                    ob._bids(),
+                    init_book(vec![(395, DEFAULT_ARENA_CAPACITY - 1)])
+                );
                 assert_eq!(ob.spread(), None);
                 assert_eq!(ob.traded_volume(), 0);
                 assert_eq!(
@@ -624,7 +628,10 @@ mod test {
             } else {
                 assert_eq!(ob.min_ask(), Some(395));
                 assert_eq!(ob.max_bid(), None);
-                assert_eq!(ob._asks(), init_book(vec![(395, 9999)]));
+                assert_eq!(
+                    ob._asks(),
+                    init_book(vec![(395, DEFAULT_ARENA_CAPACITY - 1)])
+                );
                 assert_eq!(ob._bids(), BTreeMap::new());
                 assert_eq!(ob.spread(), None);
                 assert_eq!(ob.traded_volume(), 0);
@@ -671,8 +678,14 @@ mod test {
                 );
                 assert_eq!(ob.min_ask(), Some(398));
                 assert_eq!(ob.max_bid(), Some(395));
-                assert_eq!(ob._asks(), init_book(vec![(398, 9998)]));
-                assert_eq!(ob._bids(), init_book(vec![(395, 9999)]));
+                assert_eq!(
+                    ob._asks(),
+                    init_book(vec![(398, DEFAULT_ARENA_CAPACITY - 2)])
+                );
+                assert_eq!(
+                    ob._bids(),
+                    init_book(vec![(395, DEFAULT_ARENA_CAPACITY - 1)])
+                );
                 assert_eq!(ob.spread(), Some(3));
                 assert_eq!(ob.traded_volume(), 0);
                 assert_eq!(
@@ -708,7 +721,10 @@ mod test {
                 );
                 assert_eq!(ob.min_ask(), Some(395));
                 assert_eq!(ob.max_bid(), None);
-                assert_eq!(ob._asks(), init_book(vec![(395, 9999)]));
+                assert_eq!(
+                    ob._asks(),
+                    init_book(vec![(395, DEFAULT_ARENA_CAPACITY - 1)])
+                );
                 assert_eq!(ob._bids(), init_book(vec![]));
                 assert_eq!(ob.spread(), None);
                 assert_eq!(ob.traded_volume(), 2);
@@ -766,7 +782,10 @@ mod test {
                 assert_eq!(ob._asks(), BTreeMap::new());
                 assert_eq!(
                     ob._bids(),
-                    init_book(vec![(395, 9999), (395, 9998)])
+                    init_book(vec![
+                        (395, DEFAULT_ARENA_CAPACITY - 1),
+                        (395, DEFAULT_ARENA_CAPACITY - 2)
+                    ])
                 );
                 assert_eq!(ob.spread(), None);
                 assert_eq!(ob.traded_volume(), 0);
@@ -787,7 +806,10 @@ mod test {
                 assert_eq!(ob.max_bid(), None);
                 assert_eq!(
                     ob._asks(),
-                    init_book(vec![(395, 9999), (395, 9998)])
+                    init_book(vec![
+                        (395, DEFAULT_ARENA_CAPACITY - 1),
+                        (395, DEFAULT_ARENA_CAPACITY - 2)
+                    ])
                 );
                 assert_eq!(ob._bids(), BTreeMap::new());
                 assert_eq!(ob.spread(), None);
@@ -838,7 +860,10 @@ mod test {
                 assert_eq!(ob._asks(), BTreeMap::new());
                 assert_eq!(
                     ob._bids(),
-                    init_book(vec![(398, 9998), (395, 9999)])
+                    init_book(vec![
+                        (398, DEFAULT_ARENA_CAPACITY - 2),
+                        (395, DEFAULT_ARENA_CAPACITY - 1)
+                    ])
                 );
                 assert_eq!(ob.spread(), None);
             } else {
@@ -846,7 +871,10 @@ mod test {
                 assert_eq!(ob.max_bid(), None);
                 assert_eq!(
                     ob._asks(),
-                    init_book(vec![(398, 9998), (395, 9999)])
+                    init_book(vec![
+                        (398, DEFAULT_ARENA_CAPACITY - 2),
+                        (395, DEFAULT_ARENA_CAPACITY - 1)
+                    ])
                 );
                 assert_eq!(ob._bids(), BTreeMap::new());
                 assert_eq!(ob.spread(), None);
@@ -888,10 +916,16 @@ mod test {
                 );
                 assert_eq!(ob.min_ask(), Some(399));
                 assert_eq!(ob.max_bid(), Some(398));
-                assert_eq!(ob._asks(), init_book(vec![(399, 9998)]));
+                assert_eq!(
+                    ob._asks(),
+                    init_book(vec![(399, DEFAULT_ARENA_CAPACITY - 2)])
+                );
                 assert_eq!(
                     ob._bids(),
-                    init_book(vec![(398, 9997), (395, 9999)])
+                    init_book(vec![
+                        (398, DEFAULT_ARENA_CAPACITY - 3),
+                        (395, DEFAULT_ARENA_CAPACITY - 1)
+                    ])
                 );
                 assert_eq!(ob.spread(), Some(1));
             } else {
@@ -918,7 +952,10 @@ mod test {
                 assert_eq!(ob.max_bid(), None);
                 assert_eq!(
                     ob._asks(),
-                    init_book(vec![(398, 9998), (395, 9999)])
+                    init_book(vec![
+                        (398, DEFAULT_ARENA_CAPACITY - 2),
+                        (395, DEFAULT_ARENA_CAPACITY - 1)
+                    ])
                 );
                 assert_eq!(ob._bids(), init_book(vec![]));
                 assert_eq!(ob.spread(), None);
@@ -982,10 +1019,16 @@ mod test {
                 );
                 assert_eq!(ob.min_ask(), Some(399));
                 assert_eq!(ob.max_bid(), Some(398));
-                assert_eq!(ob._asks(), init_book(vec![(399, 9998)]));
+                assert_eq!(
+                    ob._asks(),
+                    init_book(vec![(399, DEFAULT_ARENA_CAPACITY - 2)])
+                );
                 assert_eq!(
                     ob._bids(),
-                    init_book(vec![(398, 9997), (395, 9999)])
+                    init_book(vec![
+                        (398, DEFAULT_ARENA_CAPACITY - 3),
+                        (395, DEFAULT_ARENA_CAPACITY - 1)
+                    ])
                 );
                 assert_eq!(ob.spread(), Some(1));
             } else {
@@ -1027,7 +1070,10 @@ mod test {
                 assert_eq!(ob.max_bid(), None);
                 assert_eq!(
                     ob._asks(),
-                    init_book(vec![(398, 9998), (395, 9999)])
+                    init_book(vec![
+                        (398, DEFAULT_ARENA_CAPACITY - 2),
+                        (395, DEFAULT_ARENA_CAPACITY - 1)
+                    ])
                 );
                 assert_eq!(ob._bids(), init_book(vec![]));
                 assert_eq!(ob.spread(), None);
@@ -1091,10 +1137,16 @@ mod test {
                 );
                 assert_eq!(ob.min_ask(), Some(399));
                 assert_eq!(ob.max_bid(), Some(395));
-                assert_eq!(ob._asks(), init_book(vec![(399, 9998)]));
+                assert_eq!(
+                    ob._asks(),
+                    init_book(vec![(399, DEFAULT_ARENA_CAPACITY - 2)])
+                );
                 assert_eq!(
                     ob._bids(),
-                    init_book_holes(vec![(395, 9999)], vec![398])
+                    init_book_holes(
+                        vec![(395, DEFAULT_ARENA_CAPACITY - 1)],
+                        vec![398]
+                    )
                 );
                 assert_eq!(ob.spread(), Some(4));
             } else {
@@ -1136,7 +1188,10 @@ mod test {
                 assert_eq!(ob.max_bid(), None);
                 assert_eq!(
                     ob._asks(),
-                    init_book(vec![(395, 9999), (398, 9998)])
+                    init_book(vec![
+                        (395, DEFAULT_ARENA_CAPACITY - 1),
+                        (398, DEFAULT_ARENA_CAPACITY - 2)
+                    ])
                 );
                 assert_eq!(ob._bids(), init_book(vec![]));
                 assert_eq!(ob.spread(), None);
@@ -1202,11 +1257,17 @@ mod test {
                 assert_eq!(ob.max_bid(), Some(395));
                 assert_eq!(
                     ob._asks(),
-                    init_book(vec![(399, 9998), (397, 9996)])
+                    init_book(vec![
+                        (399, DEFAULT_ARENA_CAPACITY - 2),
+                        (397, DEFAULT_ARENA_CAPACITY - 4)
+                    ])
                 );
                 assert_eq!(
                     ob._bids(),
-                    init_book_holes(vec![(395, 9999)], vec![398])
+                    init_book_holes(
+                        vec![(395, DEFAULT_ARENA_CAPACITY - 1)],
+                        vec![398]
+                    )
                 );
                 assert_eq!(ob.spread(), Some(2));
             } else {
@@ -1248,7 +1309,10 @@ mod test {
                 assert_eq!(ob.max_bid(), None);
                 assert_eq!(
                     ob._asks(),
-                    init_book(vec![(395, 9999), (398, 9998)])
+                    init_book(vec![
+                        (395, DEFAULT_ARENA_CAPACITY - 1),
+                        (398, DEFAULT_ARENA_CAPACITY - 2)
+                    ])
                 );
                 assert_eq!(ob._bids(), init_book(vec![]));
                 assert_eq!(ob.spread(), None);
@@ -1335,7 +1399,10 @@ mod test {
                 );
                 assert_eq!(ob.min_ask(), Some(399));
                 assert_eq!(ob.max_bid(), None);
-                assert_eq!(ob._asks(), init_book(vec![(399, 9998)]));
+                assert_eq!(
+                    ob._asks(),
+                    init_book(vec![(399, DEFAULT_ARENA_CAPACITY - 2)])
+                );
                 assert_eq!(ob._bids(), init_book_holes(vec![], vec![395, 398]));
                 assert_eq!(ob.spread(), None);
             } else {
@@ -1457,10 +1524,16 @@ mod test {
                 );
                 assert_eq!(ob.min_ask(), Some(399));
                 assert_eq!(ob.max_bid(), Some(395));
-                assert_eq!(ob._asks(), init_book(vec![(399, 9998)]));
+                assert_eq!(
+                    ob._asks(),
+                    init_book(vec![(399, DEFAULT_ARENA_CAPACITY - 2)])
+                );
                 assert_eq!(
                     ob._bids(),
-                    init_book_holes(vec![(395, 9999)], vec![398])
+                    init_book_holes(
+                        vec![(395, DEFAULT_ARENA_CAPACITY - 1)],
+                        vec![398]
+                    )
                 );
                 assert_eq!(ob.spread(), Some(4));
             } else {
@@ -1502,7 +1575,10 @@ mod test {
                 assert_eq!(ob.max_bid(), None);
                 assert_eq!(
                     ob._asks(),
-                    init_book(vec![(395, 9999), (398, 9998)])
+                    init_book(vec![
+                        (395, DEFAULT_ARENA_CAPACITY - 1),
+                        (398, DEFAULT_ARENA_CAPACITY - 2)
+                    ])
                 );
                 assert_eq!(ob._bids(), init_book(vec![]));
                 assert_eq!(ob.spread(), None);
@@ -1583,10 +1659,16 @@ mod test {
                 assert_eq!(result, OrderEvent::Canceled { id: 0 });
                 assert_eq!(ob.min_ask(), Some(399));
                 assert_eq!(ob.max_bid(), Some(398));
-                assert_eq!(ob._asks(), init_book(vec![(399, 9998)]));
+                assert_eq!(
+                    ob._asks(),
+                    init_book(vec![(399, DEFAULT_ARENA_CAPACITY - 2)])
+                );
                 assert_eq!(
                     ob._bids(),
-                    init_book_holes(vec![(398, 9997)], vec![395])
+                    init_book_holes(
+                        vec![(398, DEFAULT_ARENA_CAPACITY - 3)],
+                        vec![395]
+                    )
                 );
                 assert_eq!(ob.spread(), Some(1));
             } else {
@@ -1614,7 +1696,10 @@ mod test {
                 assert_eq!(ob.max_bid(), None);
                 assert_eq!(
                     ob._asks(),
-                    init_book_holes(vec![(398, 9998)], vec![395])
+                    init_book_holes(
+                        vec![(398, DEFAULT_ARENA_CAPACITY - 2)],
+                        vec![395]
+                    )
                 );
                 assert_eq!(ob._bids(), init_book(vec![]));
                 assert_eq!(ob.spread(), None);

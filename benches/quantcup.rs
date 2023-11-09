@@ -5,7 +5,7 @@ use std::fs::File;
 type Record = (u128, String, u64, u64);
 
 fn all_orders(c: &mut Criterion) {
-    c.bench_function("all orders", |b| {
+    c.bench_function("all 35759 orders", |b| {
         let mut orders: Vec<OrderType> = Vec::new();
         let mut ord_id = 0;
         let mut ob = OrderBook::default();
@@ -20,7 +20,7 @@ fn all_orders(c: &mut Criterion) {
 }
 
 fn all_orders_with_stats(c: &mut Criterion) {
-    c.bench_function("all orders with stats tracking", |b| {
+    c.bench_function("all 35759 orders with stats tracking", |b| {
         let mut orders: Vec<OrderType> = Vec::new();
         let mut ord_id = 0;
         let mut ob = OrderBook::default();
@@ -36,7 +36,7 @@ fn all_orders_with_stats(c: &mut Criterion) {
 }
 
 fn all_orders_with_stats_and_queries(c: &mut Criterion) {
-    c.bench_function("all orders with stats tracking and queries", |b| {
+    c.bench_function("all 35759 orders with stats tracking and queries", |b| {
         let mut orders: Vec<OrderType> = Vec::new();
         let mut ord_id = 0;
         let mut ob = OrderBook::default();

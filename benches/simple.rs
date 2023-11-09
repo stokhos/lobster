@@ -18,7 +18,7 @@ fn small_limit_ladder(c: &mut Criterion) {
 }
 
 fn medium_limit_ladder(c: &mut Criterion) {
-    c.bench_function("small limit ladder (5000 levels)", |b| {
+    c.bench_function("medium limit ladder (5000 levels)", |b| {
         let mut ob = OrderBook::default();
         b.iter(|| {
             for i in 0..5_000 {

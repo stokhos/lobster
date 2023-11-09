@@ -5,8 +5,8 @@ use crate::models::{
     BookDepth, BookLevel, FillMetadata, OrderEvent, OrderType, Side, Trade,
 };
 
-const DEFAULT_ARENA_CAPACITY: usize = 10_000;
-const DEFAULT_QUEUE_CAPACITY: usize = 10;
+const DEFAULT_ARENA_CAPACITY: usize = 3_000;
+const DEFAULT_QUEUE_CAPACITY: usize = 32;
 
 /// An order book that executes orders serially through the [`execute`] method.
 ///

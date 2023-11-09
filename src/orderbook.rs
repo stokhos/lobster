@@ -166,7 +166,7 @@ impl OrderBook {
             return event;
         }
 
-        match event.clone() {
+        match &event {
             OrderEvent::Filled {
                 id: _,
                 filled_qty,
@@ -176,12 +176,12 @@ impl OrderBook {
                 // If we are here, fills is not empty, so it's safe to unwrap it
                 let last_fill = fills.last().unwrap();
                 self.last_trade = Some(Trade {
-                    total_qty: filled_qty,
+                    total_qty: *filled_qty,
                     avg_price: fills
                         .iter()
                         .map(|fm| fm.price * fm.qty)
                         .sum::<u64>() as f64
-                        / (filled_qty as f64),
+                        / (*filled_qty as f64),
                     last_qty: last_fill.qty,
                     last_price: last_fill.price,
                 });
@@ -195,12 +195,12 @@ impl OrderBook {
                 // If we are here, fills is not empty, so it's safe to unwrap it
                 let last_fill = fills.last().unwrap();
                 self.last_trade = Some(Trade {
-                    total_qty: filled_qty,
+                    total_qty: *filled_qty,
                     avg_price: fills
                         .iter()
                         .map(|fm| fm.price * fm.qty)
                         .sum::<u64>() as f64
-                        / (filled_qty as f64),
+                        / (*filled_qty as f64),
                     last_qty: last_fill.qty,
                     last_price: last_fill.price,
                 });
